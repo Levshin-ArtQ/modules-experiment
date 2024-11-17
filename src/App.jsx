@@ -1,3 +1,4 @@
+import "./App.css";
 import { Suspense, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { moduleConfig } from "./moduleConfig.js";
@@ -18,8 +19,11 @@ function App() {
               return moduleRoutes.default.map((route) => ({
                 ...route,
                 element: (
-                  <Suspense fallback={<div>Loading...</div>}>
-                    {route.element()}
+                  <Suspense fallback={<div className="loading">Loading...</div>}>
+                    <div className="module-route">
+                      <p>Welcome to {moduleName} module! </p>
+                      <p>This module is enabled and functional.</p>
+                    </div>
                   </Suspense>
                 ),
               }));
@@ -28,7 +32,7 @@ function App() {
 
         setModuleRoutes(routes.flat());
       } catch (error) {
-        console.error(error);
+        console.error("Error loading routes:", error);
       }
     };
 
@@ -37,15 +41,23 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        {moduleRoutes.map((route, index) => (
-          <Route key={index} path={route.path} element={route.element} />
-        ))}
-        <Route path="*" element={<div>Module Not Found</div>} />
-      </Routes>
+      <div className="app">
+        <Routes>
+          {moduleRoutes.map((route, index) => (
+            <Route key={index} path={route.path} element={route.element} />
+          ))}
+          <Route
+            path="*"
+            element={
+              <div className="not-found">
+                <p>Oops! The module you&apos;re looking for is not available.</p>
+              </div>
+            }
+          />
+        </Routes>
+      </div>
     </Router>
   );
 }
 
 export default App;
-
