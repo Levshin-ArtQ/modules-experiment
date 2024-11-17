@@ -1,29 +1,19 @@
 import { Suspense, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { moduleConfig } from "./moduleСonfig.js";
+import { moduleConfig } from "./moduleConfig.js";
 
 function App() {
   const [moduleRoutes, setModuleRoutes] = useState([]);
 
   useEffect(() => {
-    /**
-     * Load routes from modules that are enabled in moduleConfig.
-     *
-     * The function uses Promise.all to load all routes in parallel, and then
-     * flattens the resulting array of routes. The routes are then wrapped in a
-     * Suspense component to handle loading states.
-     *
-     * The new array of routes is then set as the state of the component.
-     */
     const loadRoutes = async () => {
-      const routes = await Promise.all(
-        Object.entries(moduleConfig)
-          .filter(([, enabled]) => enabled)
-          .map(async ([moduleName]) => {
-            console.log("looking for module: ", moduleName);
-            try {
+      try {
+        const routes = await Promise.all(
+          Object.entries(moduleConfig)
+            .filter(([, enabled]) => enabled)
+            .map(async ([moduleName]) => {
               const moduleRoutes = await import(
-                `./modules/${moduleName}/routes`
+                /* webpackChunkName: "[request]" */ `./modules/${moduleName}/routes.js`
               );
               return moduleRoutes.default.map((route) => ({
                 ...route,
@@ -33,14 +23,13 @@ function App() {
                   </Suspense>
                 ),
               }));
-            } catch (error) {
-              console.error(error);
-              throw new Error(`Module ${moduleName} not found`);
-            }
-          })
-      );
+            })
+        );
 
-      setModuleRoutes(routes.flat());
+        setModuleRoutes(routes.flat());
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     loadRoutes();
@@ -59,3 +48,4 @@ function App() {
 }
 
 export default App;
+
