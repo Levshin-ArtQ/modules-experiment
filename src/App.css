@@ -3,6 +3,7 @@ body, html, #root {
   margin: 0;
   padding: 0;
   height: 100%;
+  font-family: Arial, sans-serif;
 }
 
 .app {
@@ -12,13 +13,20 @@ body, html, #root {
   align-items: center;
   justify-content: center;
   background-color: #f4f4f9;
+  transition: background-color 0.3s ease-in-out;
 }
 
 /* Loading Indicator */
-.loading {
-  font-size: 24px;
-  color: #777;
-  text-align: center;
+.loading-screen {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eee;
+  color: #555;
+  font-size: 2rem;
+  font-weight: bold;
   animation: fadeIn 1s ease-in-out infinite alternate;
 }
 
@@ -36,6 +44,7 @@ body, html, #root {
   height: 100vh;
   width: 100vw;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: #d4f8d4; /* Vibrant green background */
@@ -43,6 +52,15 @@ body, html, #root {
   font-size: 3rem; /* Extra large font size */
   font-weight: bold;
   text-align: center;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.module-route small {
+  font-size: 1rem;
+  color: #333;
+  margin-top: 1rem;
+  text-align: center;
+  max-width: 80%;
 }
 
 /* Not Found Page */
